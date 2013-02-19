@@ -1,8 +1,8 @@
 module.exports = stringify;
 
-function stringify(obj, fn, spaces) {
+function getSerialize (fn) {
   var seen = [];
-  return JSON.stringify(obj, function(key, value) {
+  return function(key, value) {
     var ret = value;
     if (typeof value === 'object' && value) {
       if (seen.indexOf(value) !== -1)
@@ -12,5 +12,11 @@ function stringify(obj, fn, spaces) {
     }
     if (fn) ret = fn(key, ret);
     return ret;
-  }, spaces);
+  }
 }
+
+function stringify(obj, fn, spaces) {
+  return JSON.stringify(obj, getSerialize(fn), spaces);
+}
+
+stringify.getSerialize = getSerialize;
