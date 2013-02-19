@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-safe",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Like JSON.stringify, but doesn't blow up on circular refs",
   "main": "stringify.js",
   "scripts": {
