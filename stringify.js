@@ -8,10 +8,10 @@ function getSerialize (fn, decycle) {
   return function(key, value) {
     var ret = value;
     if (typeof value === 'object' && value) {
-      if (seen.indexOf(value) !== -1)
+      if (value in seen)
         ret = decycle(key, value);
       else
-        seen.push(value);
+        seen[value]=null;
     }
     if (fn) ret = fn(key, ret);
     return ret;
