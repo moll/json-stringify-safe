@@ -26,13 +26,12 @@ function serializer(replacer, cycleReplacer) {
 }
 
 function pathize(stack, key, value) {
-  if (stack[0] === value) return "[Circular ~]"
+  var paths = [""]
 
-  var paths = []
   for (var i = 0, l = stack.indexOf(value); i < l; ++i)
     paths.push(findKey(stack[i], stack[i + 1]))
 
-  return "[Circular ~." + paths.join(".") + "]"
+  return "[Circular ~" + paths.join(".") + "]"
 }
 
 function findKey(obj, value) {
