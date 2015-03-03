@@ -9,7 +9,8 @@ function serializer(replacer, cycleReplacer) {
   var stack = [], keys = []
 
   if (cycleReplacer == null) cycleReplacer = function(key, value) {
-    return pathize(stack, keys, value)
+    if (stack[0] === value) return "[Circular ~]"
+    return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
   }
 
   return function(key, value) {
@@ -23,9 +24,4 @@ function serializer(replacer, cycleReplacer) {
 
     return replacer == null ? value : replacer.call(this, key, value)
   }
-}
-
-function pathize(stack, keys, value) {
-  if (stack[0] === value) return "[Circular ~]"
-  return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
 }
