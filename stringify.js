@@ -1,4 +1,3 @@
-var has = Object.hasOwnProperty
 exports = module.exports = stringify
 exports.getSerialize = serializer
 
@@ -7,35 +6,26 @@ function stringify(obj, replacer, spaces, cycleReplacer) {
 }
 
 function serializer(replacer, cycleReplacer) {
-  var stack = []
+  var stack = [], keys = []
 
   if (cycleReplacer == null) cycleReplacer = function(key, value) {
-    return pathize(stack, key, value)
+    return pathize(stack, keys, value)
   }
 
   return function(key, value) {
     if (stack.length > 0) {
       var thisPos = stack.indexOf(this)
       ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
       if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
     }
     else stack.push(value)
 
-    return replacer ? replacer.call(this, key, value) : value
+    return replacer == null ? value : replacer.call(this, key, value)
   }
 }
 
-function pathize(stack, key, value) {
-  var paths = [""]
-
-  for (var i = 0, l = stack.indexOf(value); i < l; ++i)
-    paths.push(findKey(stack[i], stack[i + 1]))
-
-  return "[Circular ~" + paths.join(".") + "]"
-}
-
-function findKey(obj, value) {
-  // For arrays from foreign context, for-in will probably do.
-  if (obj instanceof Array) return obj.indexOf(value)
-  for (var key in obj) if (has.call(obj, key) && obj[key] === value) return key
+function pathize(stack, keys, value) {
+  if (stack[0] === value) return "[Circular ~]"
+  return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
 }
