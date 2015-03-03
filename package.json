@@ -18,5 +18,11 @@
   ],
   "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
   "license": "BSD",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+
+  "devDependencies": {
+    "mocha": ">= 2.1.0 < 3",
+    "must": ">= 0.12 < 0.13",
+    "sinon": ">= 1.12.2 < 2"
+  }
 }
