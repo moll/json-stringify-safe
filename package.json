@@ -1,7 +1,7 @@
 {
 	"name": "json-stringify-safe",
 	"version": "5.0.0",
-	"description": "Like JSON.stringify, but doesn't blow up on circular refs",
+	"description": "Like JSON.stringify, but doesn't blow up on circular refs.",
 	"keywords": [
 		"json",
 		"stringify",
