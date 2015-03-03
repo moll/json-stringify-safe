@@ -110,11 +110,23 @@ var multi = {
     },
     {
       "x": 2,
-      "a": "[Circular ~.list.0]"
+      "a": {
+        "x": 1,
+        "a": "[Circular ~.list.1.a]"
+      }
     },
     {
-      "a": "[Circular ~.list.0]",
-      "b": "[Circular ~.list.1]"
+      "a": {
+        "x": 1,
+        "a": "[Circular ~.list.2.a]"
+      },
+      "b": {
+        "x": 2,
+        "a": {
+          "x": 1,
+          "a": "[Circular ~.list.2.b.a]"
+        }
+      }
     }
   ],
   "d": "[Circular ~]"
@@ -122,6 +134,13 @@ var multi = {
 
 assert.equal(JSON.stringify(multi, null, 2),
              stringify(d, null, 2));
+
+////////////////////
+// independent trees
+var obj = { foo: 'bar' };
+testObj = {"a":{"foo":"bar"},"b":{"foo":"bar"}};
+assert.equal(JSON.stringify(testObj, null, 2),
+             stringify({ a: obj, b: obj }, null, 2));
 
 ////////
 // pass!
