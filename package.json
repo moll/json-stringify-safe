@@ -2,23 +2,26 @@
 	"name": "json-stringify-safe",
 	"version": "5.0.0",
 	"description": "Like JSON.stringify, but doesn't blow up on circular refs",
-	"main": "stringify.js",
-	"scripts": {
-		"test": "node test.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/isaacs/json-stringify-safe"
-	},
 	"keywords": [
 		"json",
 		"stringify",
 		"circular",
 		"safe"
 	],
+
+	"homepage": "https://github.com/isaacs/json-stringify-safe",
+	"bugs": "https://github.com/isaacs/json-stringify-safe/issues",
 	"author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
+	"contributors": ["Andri Möll <andri@dot.ee> (http://themoll.com)"],
 	"license": "BSD",
-	"readmeFilename": "README.md",
+
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/isaacs/json-stringify-safe"
+	},
+
+	"main": "stringify.js",
+	"scripts": {"test": "node test.js"},
 
 	"devDependencies": {
 		"mocha": ">= 2.1.0 < 3",
