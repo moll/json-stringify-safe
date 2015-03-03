@@ -1,39 +1,42 @@
-module.exports = stringify;
+var has = Object.hasOwnProperty
+exports = module.exports = stringify
+exports.getSerialize = serializer
 
-function getSerialize (fn, decycle) {
-  var seen = [], keys = [];
-  decycle = decycle || function(key, value) {
-    return '[Circular ' + getPath(value, seen, keys) + ']'
-  };
+function stringify(obj, replacer, spaces, cycleReplacer) {
+  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+}
+
+function serializer(replacer, cycleReplacer) {
+  var stack = []
+
+  if (cycleReplacer == null) cycleReplacer = function(key, value) {
+    return pathize(stack, key, value)
+  }
+
   return function(key, value) {
-    var ret = value;
-    if (typeof value === 'object' && value) {
-      if (seen.indexOf(value) !== -1)
-        ret = decycle(key, value);
-      else {
-        seen.push(value);
-        keys.push(key);
-      }
-    }
-    if (fn) ret = fn(key, ret);
-    return ret;
+    if (!stack.length) return stack.push(value), value
+
+    var thisPos = stack.indexOf(this)
+    ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+
+    if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
+    if (replacer) value = replacer.call(this, key, value)
+    return value
   }
 }
 
-function getPath (value, seen, keys) {
-  var index = seen.indexOf(value);
-  var path = [ keys[index] ];
-  for (index--; index >= 0; index--) {
-    if (seen[index][ path[0] ] === value) {
-      value = seen[index];
-      path.unshift(keys[index]);
-    }
-  }
-  return '~' + path.join('.');
+function pathize(stack, key, value) {
+  if (stack[0] === value) return "[Circular ~]"
+
+  var paths = []
+  for (var i = 0, l = stack.indexOf(value); i < l; ++i)
+    paths.push(findKey(stack[i], stack[i + 1]))
+
+  return "[Circular ~." + paths.join(".") + "]"
 }
 
-function stringify(obj, fn, spaces, decycle) {
-  return JSON.stringify(obj, getSerialize(fn, decycle), spaces);
+function findKey(obj, value) {
+  // For arrays from foreign context, for-in will probably do.
+  if (obj instanceof Array) return obj.indexOf(value)
+  for (var key in obj) if (has.call(obj, key) && obj[key] === value) return key
 }
-
-stringify.getSerialize = getSerialize;
