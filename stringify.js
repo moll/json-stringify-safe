@@ -14,14 +14,14 @@ function serializer(replacer, cycleReplacer) {
   }
 
   return function(key, value) {
-    if (!stack.length) return stack.push(value), value
+    if (stack.length > 0) {
+      var thisPos = stack.indexOf(this)
+      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+      if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
+    }
+    else stack.push(value)
 
-    var thisPos = stack.indexOf(this)
-    ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
-
-    if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
-    if (replacer) value = replacer.call(this, key, value)
-    return value
+    return replacer ? replacer.call(this, key, value) : value
   }
 }
 

@@ -119,40 +119,41 @@ describe("Stringify", function() {
   it("must call replacer and use its output", function() {
     var obj = {name: "Alice", child: {name: "Bob"}}
 
-    var replacer = Sinon.spy(function(key, value) {
-      return typeof value == "string" ? value + "!" : value
-    })
-
+    var replacer = Sinon.spy(bangString)
     var json = stringify(obj, replacer, 2)
     json.must.eql(jsonify({name: "Alice!", child: {name: "Bob!"}}))
 
-    replacer.callCount.must.equal(3)
-    replacer.thisValues[0].must.equal(obj)
-    replacer.args[0][0].must.equal("name")
-    replacer.args[0][1].must.equal("Alice")
+    replacer.callCount.must.equal(4)
+    replacer.args[0][0].must.equal("")
+    replacer.args[0][1].must.equal(obj)
     replacer.thisValues[1].must.equal(obj)
-    replacer.args[1][0].must.equal("child")
-    replacer.args[1][1].must.equal(obj.child)
-    replacer.thisValues[2].must.equal(obj.child)
-    replacer.args[2][0].must.equal("name")
-    replacer.args[2][1].must.equal("Bob")
+    replacer.args[1][0].must.equal("name")
+    replacer.args[1][1].must.equal("Alice")
+    replacer.thisValues[2].must.equal(obj)
+    replacer.args[2][0].must.equal("child")
+    replacer.args[2][1].must.equal(obj.child)
+    replacer.thisValues[3].must.equal(obj.child)
+    replacer.args[3][0].must.equal("name")
+    replacer.args[3][1].must.equal("Bob")
   })
 
   it("must call replacer after describing circular references", function() {
     var obj = {name: "Alice"}
     obj.self = obj
 
-    var replacer = Sinon.spy(function(key, value) { return value + "!" })
+    var replacer = Sinon.spy(bangString)
     var json = stringify(obj, replacer, 2)
     json.must.eql(jsonify({name: "Alice!", self: "[Circular ~]!"}))
 
-    replacer.callCount.must.equal(2)
-    replacer.thisValues[0].must.equal(obj)
-    replacer.args[0][0].must.equal("name")
-    replacer.args[0][1].must.equal("Alice")
+    replacer.callCount.must.equal(3)
+    replacer.args[0][0].must.equal("")
+    replacer.args[0][1].must.equal(obj)
     replacer.thisValues[1].must.equal(obj)
-    replacer.args[1][0].must.equal("self")
-    replacer.args[1][1].must.equal("[Circular ~]")
+    replacer.args[1][0].must.equal("name")
+    replacer.args[1][1].must.equal("Alice")
+    replacer.thisValues[2].must.equal(obj)
+    replacer.args[2][0].must.equal("self")
+    replacer.args[2][1].must.equal("[Circular ~]")
   })
 
   it("must call given decycler and use its output for nested objects",
@@ -239,3 +240,7 @@ describe("Stringify", function() {
     })
   })
 })
+
+function bangString(key, value) {
+  return typeof value == "string" ? value + "!" : value
+}
