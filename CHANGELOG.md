@@ -1,4 +1,4 @@
-## Unreleased
+## 5.0.1 (May 19, 2015)
 - Fixes stringify to only take ancestors into account when checking
   circularity.  
   It previously assumed every visited object was circular which led to [false
