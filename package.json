@@ -21,7 +21,7 @@
   },
   "main": "stringify.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "make test"
   },
   "devDependencies": {
     "mocha": ">= 2.1.0 < 3",
