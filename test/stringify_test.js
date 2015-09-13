@@ -156,6 +156,39 @@ describe("Stringify", function() {
     replacer.args[2][1].must.equal("[Circular ~]")
   })
 
+  it("must support array replacer", function() {
+    var obj = {name: "Alice", child: {name: "Bob", "": "Carol"}, "": "Dan"}
+    obj.child.self = obj.child
+
+    stringify(obj, ["name"], 2).must.eql(jsonify({
+      name: "Alice"
+    }))
+
+    stringify(obj, ["name", ""], 2).must.eql(jsonify({
+      name: "Alice",
+      "": "Dan"
+    }))
+
+    stringify(obj, ["child"], 2).must.eql(jsonify({
+      child: {}
+    }))
+
+    stringify(obj, ["child", ""], 2).must.eql(jsonify({
+      child: {
+        "": "Carol"
+      },
+      "": "Dan"
+    }))
+
+    stringify(obj, ["child", "", "self"], 2).must.eql(jsonify({
+      child: {
+        "": "Carol",
+        self: "[Circular ~.child]"
+      },
+      "": "Dan"
+    }))
+  })
+
   it("must call given decycler and use its output for nested objects",
     function() {
     var obj = {}

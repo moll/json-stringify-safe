@@ -6,7 +6,7 @@ function stringify(obj, replacer, spaces, cycleReplacer) {
 }
 
 function serializer(replacer, cycleReplacer) {
-  var stack = [], keys = []
+  var stack = [], keys = [], replacerArray = Array.isArray(replacer)
 
   if (cycleReplacer == null) cycleReplacer = function(key, value) {
     if (stack[0] === value) return "[Circular ~]"
@@ -15,6 +15,10 @@ function serializer(replacer, cycleReplacer) {
 
   return function(key, value) {
     if (stack.length > 0) {
+      if (replacerArray && replacer.indexOf(key) === -1) {
+        return
+      }
+
       var thisPos = stack.indexOf(this)
       ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
       ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
@@ -22,6 +26,6 @@ function serializer(replacer, cycleReplacer) {
     }
     else stack.push(value)
 
-    return replacer == null ? value : replacer.call(this, key, value)
+    return replacer == null || replacerArray ? value : replacer.call(this, key, value)
   }
 }
