@@ -16,8 +16,14 @@ function serializer(replacer, cycleReplacer) {
   return function(key, value) {
     if (stack.length > 0) {
       var thisPos = stack.indexOf(this)
-      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
-      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
+      if (~thisPos) {
+        stack.length = thisPos + 1
+        keys.length = thisPos + 1
+        keys[thisPos] = key
+      } else {
+        stack.push(this)
+        keys.push(key)
+      }
       if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
     }
     else stack.push(value)
