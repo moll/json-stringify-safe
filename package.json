@@ -24,7 +24,7 @@
     "test": "make test"
   },
   "devDependencies": {
-    "mocha": ">= 2.1.0 < 3",
+    "mocha": ">=3.0.0",
     "must": ">= 0.12 < 0.13",
     "sinon": ">= 1.12.2 < 2"
   }
