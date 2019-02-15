@@ -22,6 +22,6 @@ function serializer(replacer, cycleReplacer) {
     }
     else stack.push(value)
 
-    return replacer == null ? value : replacer.call(this, key, value)
+    return !replacer ? value : replacer.call(this, key, value)
   }
 }
