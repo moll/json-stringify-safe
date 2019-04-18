@@ -1,6 +1,6 @@
 # json-stringify-safe
 
-Like JSON.stringify, but doesn't throw on circular references.
+Like `JSON.stringify`, but doesn't throw on circular references.
 
 ## Usage
 
@@ -18,10 +18,10 @@ Output:
 
 ```json
 {
-  "circularRef": "[Circular]",
+  "circularRef": "[Circular ~]",
   "list": [
-    "[Circular]",
-    "[Circular]"
+    "[Circular ~]",
+    "[Circular ~]"
   ]
 }
 ```
@@ -35,11 +35,13 @@ stringify(obj, serializer, indent, decycler)
 The first three arguments are the same as to JSON.stringify.  The last
 is an argument that's only used when the object has been seen already.
 
-The default `decycler` function returns the string `'[Circular]'`.
-If, for example, you pass in `function(k,v){}` (return nothing) then it
-will prune cycles.  If you pass in `function(k,v){ return {foo: 'bar'}}`,
-then cyclical objects will always be represented as `{"foo":"bar"}` in
-the result.
+The default `decycler` function returns a string like `'[Circular ~.a.b]'`
+where `~.a.b` represents where the circular reference comes from (`~` being
+the stringified object). If, for example, you pass an empty function `(k,v) => {}`
+then it will prune cycles. If you pass in `(k,v) => ({ foo: 'bar' })`, then
+cyclical objects will always be represented as `{"foo":"bar"}` in the result.
+If you pass `() => '[Circular]'`, then every circular reference will be just
+`[Circular]` without the `~`-path.
 
 ```
 stringify.getSerialize(serializer, decycler)
