@@ -22,6 +22,8 @@ function serializer(replacer, cycleReplacer) {
     }
     else stack.push(value)
 
+    if (typeof value === "bigint") value = value.toString()
+
     return replacer == null ? value : replacer.call(this, key, value)
   }
 }

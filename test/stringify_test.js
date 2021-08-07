@@ -98,6 +98,19 @@ describe("Stringify", function() {
     json.must.eql(jsonify([{name: "Alice"}, {name: "Alice"}]))
   })
 
+  it("must stringify BigInts", function() {
+    var bigint = 1n
+    var json = stringify(bigint, null, 2)
+    json.must.eql(jsonify("1"))
+  })
+
+  it("must stringify circular objects with BigInts", function() {
+    var obj = {n: 1n}
+    obj.identity = {self: obj}
+    var json = stringify(obj, null, 2)
+    json.must.eql(jsonify({n: "1", identity: {self: "[Circular ~]"}}))
+  })
+
   it("must call given decycler and use its output", function() {
     var obj = {}
     obj.a = obj
