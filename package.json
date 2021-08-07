@@ -1,18 +1,20 @@
 {
   "name": "json-stringify-safe",
-  "version": "5.0.1",
-  "description": "Like JSON.stringify, but doesn't blow up on circular refs.",
+  "version": "5.1.0",
+  "description": "Like JSON.stringify, but doesn't blow up on circular refs and BigInts.",
   "keywords": [
     "json",
     "stringify",
     "circular",
-    "safe"
+    "safe",
+    "bigint"
   ],
   "homepage": "https://github.com/isaacs/json-stringify-safe",
   "bugs": "https://github.com/isaacs/json-stringify-safe/issues",
   "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
   "contributors": [
-    "Andri Möll <andri@dot.ee> (http://themoll.com)"
+    "Andri Möll <andri@dot.ee> (http://themoll.com)",
+    "Luka Maljic <luka@maljic.com> (https://codecraft.dev)"
   ],
   "license": "ISC",
   "repository": {

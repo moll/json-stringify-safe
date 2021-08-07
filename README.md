@@ -1,6 +1,6 @@
 # json-stringify-safe
 
-Like JSON.stringify, but doesn't throw on circular references.
+Like JSON.stringify, but doesn't throw on circular references and BigInt values.
 
 ## Usage
 
@@ -11,6 +11,7 @@ var stringify = require('json-stringify-safe');
 var circularObj = {};
 circularObj.circularRef = circularObj;
 circularObj.list = [ circularObj, circularObj ];
+circularObj.bigint = 1n;
 console.log(stringify(circularObj, null, 2));
 ```
 
@@ -22,7 +23,8 @@ Output:
   "list": [
     "[Circular]",
     "[Circular]"
-  ]
+  ],
+  "bigint": "1"
 }
 ```
 
@@ -40,6 +42,8 @@ If, for example, you pass in `function(k,v){}` (return nothing) then it
 will prune cycles.  If you pass in `function(k,v){ return {foo: 'bar'}}`,
 then cyclical objects will always be represented as `{"foo":"bar"}` in
 the result.
+
+`BigInt` values are serialized as strings.
 
 ```
 stringify.getSerialize(serializer, decycler)
